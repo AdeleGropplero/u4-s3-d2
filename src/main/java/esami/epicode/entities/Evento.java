@@ -23,6 +23,7 @@ public class Evento {
     private String descrizione;
 
     @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
     private TipoEvento tipoEvento;
 
     @Column(nullable = false)

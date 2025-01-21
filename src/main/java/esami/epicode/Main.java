@@ -31,17 +31,30 @@ public class Main {
                 "Una conferenza per scoprire le ultime innovazioni tecnologiche.",
                 TipoEvento.PRIVATO, 200);
 
-       /* save(e1);
-        save(e2);
-        save(e3);*/
+        Evento e4 = new Evento(
+                "Lelle in vacanza",
+                LocalDate.of(2026, 7, 20),
+                "Un mese in un paradiso caraibico solo per donne!",
+                TipoEvento.PUBBLICO, 200);
 
-        Evento e = find(1);
-        System.out.println(e);
+/*
+        save(e1);
+        save(e2);
+        save(e3);
+        save(e4);
+*/
+
+
+        Evento evento2 = find(2);
+        System.out.println(evento2);
+
+        Evento evento4 = find(4);
+        System.out.println(evento4);
 
   /*      Evento ebt = findByTitle("Tech Conference 2025");
         System.out.println(ebt);*/ // NON SI PUò FARE.
 
-        remove(e);
+        remove(evento2);
 
         em.close();
         emf.close();
