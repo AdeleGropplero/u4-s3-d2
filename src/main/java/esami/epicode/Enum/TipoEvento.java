@@ -1,4 +1,4 @@
-package esami.epicode;
+package esami.epicode.Enum;
 
 public enum TipoEvento {
     PUBBLICO,

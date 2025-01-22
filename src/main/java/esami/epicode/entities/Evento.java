@@ -1,8 +1,10 @@
 package esami.epicode.entities;
-import esami.epicode.TipoEvento;
+import esami.epicode.Enum.TipoEvento;
 
 import javax.persistence.*;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 //Un Entiy deve avere per forza un costruttore vuoto.
 @Entity
@@ -10,7 +12,7 @@ import java.time.LocalDate;
 public class Evento {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue
     private long id;
 
     @Column(nullable = false, unique = true)
@@ -29,15 +31,24 @@ public class Evento {
     @Column(nullable = false)
     private int numMaxPartecipanti;
 
+//-------------------------------------aggiunte-----------------------------------------------------------------
+    @ManyToOne()
+    @JoinColumn(name = "location_id")
+    private Location location;
+    @OneToMany(mappedBy = "evento")
+    private List<Partecipazione> partecipazioni;
+
     public Evento() {
     }
 
-    public Evento(String titolo, LocalDate dataEvento, String descrizione, TipoEvento tipoEvento, int numMaxPartecipanti) {
+    public Evento(String titolo, LocalDate dataEvento, String descrizione, TipoEvento tipoEvento, int numMaxPartecipanti, Location location) {
         this.titolo = titolo;
         this.dataEvento = dataEvento;
         this.descrizione = descrizione;
         this.tipoEvento = tipoEvento;
         this.numMaxPartecipanti = numMaxPartecipanti;
+        this.location = location;
+        this.partecipazioni = new ArrayList<>();
     }
 
     public long getId() {
@@ -88,6 +99,22 @@ public class Evento {
         this.numMaxPartecipanti = numMaxPartecipanti;
     }
 
+    public Location getLocation() {
+        return location;
+    }
+
+    public void setLocation(Location location) {
+        this.location = location;
+    }
+
+    public List<Partecipazione> getPartecipazioni() {
+        return partecipazioni;
+    }
+
+    public void setPartecipazioni(List<Partecipazione> partecipazioni) {
+        this.partecipazioni = partecipazioni;
+    }
+
     @Override
     public String toString() {
         return "Evento{" +
@@ -97,6 +124,8 @@ public class Evento {
                 ", descrizione='" + descrizione + '\'' +
                 ", tipoEvento=" + tipoEvento +
                 ", numMaxPartecipanti=" + numMaxPartecipanti +
+                ", location=" + location +
+                ", partecipazioni=" + partecipazioni +
                 '}';
     }
 }

@@ -1,12 +1,25 @@
 package esami.epicode;
 
 
+import com.github.javafaker.Faker;
+import esami.epicode.DAO.EventoDAO;
+import esami.epicode.DAO.LocationDAO;
+import esami.epicode.DAO.PartecipazioneDAO;
+import esami.epicode.DAO.PersonaDAO;
+import esami.epicode.Enum.Sesso;
+import esami.epicode.Enum.StatoPartecipazione;
+import esami.epicode.Enum.TipoEvento;
 import esami.epicode.entities.Evento;
+import esami.epicode.entities.Location;
+import esami.epicode.entities.Partecipazione;
+import esami.epicode.entities.Persona;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 import java.time.LocalDate;
+import java.util.Locale;
+import java.util.concurrent.ThreadLocalRandom;
 
 public class Main {
     public static EntityManagerFactory emf = Persistence.createEntityManagerFactory("u4-s3-d2");
@@ -14,7 +27,7 @@ public class Main {
     //Ora con l'oggetto em posso invocare tutte le azioni dal database.
 
     public static void main(String[] args) {
-        Evento e1 = new Evento(
+/*        Evento e1 = new Evento(
                 "SuperTrampoline", LocalDate.of(2025, 5, 10),
                 "Trampolini per tutte le età! Gratis sotto i 10 anni",
                 TipoEvento.PUBBLICO, 200);
@@ -35,54 +48,57 @@ public class Main {
                 "Lelle in vacanza",
                 LocalDate.of(2026, 7, 20),
                 "Un mese in un paradiso caraibico solo per donne!",
-                TipoEvento.PUBBLICO, 200);
+                TipoEvento.PUBBLICO, 200);*/
 
+
+      /*  EventoDAO eventoDao = new EventoDAO(em);*/
 /*
-        save(e1);
-        save(e2);
-        save(e3);
-        save(e4);
+        eventoDao.save(e1);
+        eventoDao.save(e2);
+        eventoDao.save(e3);
+        eventoDao.save(e4);
 */
 
+        // Evento getEv = eventoDao.getByID(1);
+        // System.out.println(getEv);
 
-        Evento evento2 = find(2);
-        System.out.println(evento2);
+        // eventoDao.delete(getEv);
 
-        Evento evento4 = find(4);
-        System.out.println(evento4);
+//-------------------------------------aggiunte-----------------------------------------------------------------//
+        Faker faker = new Faker(Locale.ITALY);
+        EventoDAO eventoDao = new EventoDAO(em);
+        LocationDAO locationDAO = new LocationDAO(em);
+        PersonaDAO personaDAO = new PersonaDAO(em);
+        PartecipazioneDAO partecipazioneDAO = new PartecipazioneDAO(em);
 
-  /*      Evento ebt = findByTitle("Tech Conference 2025");
-        System.out.println(ebt);*/ // NON SI PUò FARE.
+  /*     Location l1 = new Location(faker.name().name(), faker.address().city());
+        locationDAO.save(l1);
 
-        remove(evento2);
+       Persona p1 = new Persona(faker.name().firstName(),
+                faker.name().lastName(),
+                faker.internet().emailAddress(),
+                LocalDate.of(1992, 02, 19),
+                faker.options().option(Sesso.class));
+
+        personaDAO.save(p1);
+
+        Evento e1 = new Evento(
+                faker.book().title(), // Titolo
+                LocalDate.now().plusDays(ThreadLocalRandom.current().nextInt(1, 31)), // Data evento casuale
+                faker.lorem().sentence(10), // Descrizione
+                faker.options().option(TipoEvento.class), // Tipo di evento casuale
+                ThreadLocalRandom.current().nextInt(10, 101), // Numero massimo partecipanti
+                 l1// Location casuale
+        );
+        eventoDao.save(e1);*/
+
+        Partecipazione par1 = new Partecipazione( faker.options().option(StatoPartecipazione.class), personaDAO.getById(2), eventoDao.getByID(3));
+        partecipazioneDAO.save(par1);
+
+
 
         em.close();
         emf.close();
     }
 
-    public static void save(Evento evento) {
-        em.getTransaction().begin();
-        em.persist(evento);
-        em.getTransaction().commit();
-    }
-
-    public static Evento find(long id) {
-        em.getTransaction().begin();
-        Evento e = em.find(Evento.class, id);
-        em.getTransaction().commit();
-        return e;
-    }
-
-    public static void remove(Evento evento) {
-        em.getTransaction().begin();
-        em.remove(evento);
-        em.getTransaction().commit();
-    }
-
-/*    public static Evento findByTitle(String titolo) {
-        em.getTransaction().begin();
-        Evento e = em.find(Evento.class, titolo);
-        em.getTransaction().commit();
-        return e;
-    }*/ //QUESTO NON LO PUOI FARE, SI ASPETTA UN LONG id COME ARGOMENTO.
 }
